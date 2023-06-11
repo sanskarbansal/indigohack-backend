@@ -12,6 +12,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.13.4",
-    "mongoose": "^7.2.3"
+    "mongoose": "^7.2.3",
+    "mysql2": "^3.3.3",
+    "sequelize": "^6.32.0"
   }
 }

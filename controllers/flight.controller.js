@@ -26,7 +26,8 @@ const getFlightById = async (req, res) => {
 
 // Create a new flight
 const createFlight = async (req, res) => {
-    const { flight_id, airline, status, departure_gate, arrival_gate, scheduled_departure, scheduled_arrival, actual_departure, actual_arrival } = req.body;
+    const { flight_id, airline, status, departure_gate, arrival_gate, scheduled_departure, scheduled_arrival, actual_departure, actual_arrival, from, to } =
+        req.body;
 
     try {
         const newFlight = new Flight({
@@ -39,6 +40,8 @@ const createFlight = async (req, res) => {
             scheduled_arrival,
             actual_departure,
             actual_arrival,
+            from,
+            to,
         });
 
         const savedFlight = await newFlight.save();
@@ -50,7 +53,7 @@ const createFlight = async (req, res) => {
 
 // Update a flight
 const updateFlight = async (req, res) => {
-    const { airline, status, departure_gate, arrival_gate, scheduled_departure, scheduled_arrival, actual_departure, actual_arrival } = req.body;
+    const { airline, status, from, to, departure_gate, arrival_gate, scheduled_departure, scheduled_arrival, actual_departure, actual_arrival } = req.body;
 
     try {
         // Fetch the current flight document before updating
@@ -64,6 +67,8 @@ const updateFlight = async (req, res) => {
         const updatedFlight = await Flight.findOneAndUpdate(
             { _id: req.params.id },
             {
+                from,
+                to,
                 airline,
                 status,
                 departure_gate,
@@ -100,10 +105,42 @@ const deleteFlight = async (req, res) => {
     }
 };
 
+const search = async (req, res) => {
+    try {
+        const { search } = req.query;
+
+        if (!search) {
+            return res.status(400).json({ message: "Search query is required." });
+        }
+
+        const searchRegex = new RegExp("^" + search, "i");
+        const searchCriteria = {
+            $or: [
+                { from: { $regex: searchRegex } },
+                { to: { $regex: searchRegex } },
+                { status: { $regex: searchRegex } },
+                { airline: { $regex: searchRegex } },
+            ],
+        };
+
+        const flights = await Flight.find(searchCriteria);
+
+        if (flights.length === 0) {
+            return res.status(404).json({ message: "No flights found for the given criteria." });
+        }
+
+        res.json(flights);
+    } catch (error) {
+        console.error("Error searching flights:", error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
 module.exports = {
     getFlights,
     getFlightById,
     createFlight,
     updateFlight,
     deleteFlight,
+    search,
 };

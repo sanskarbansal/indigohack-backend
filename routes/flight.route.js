@@ -4,6 +4,7 @@ const flightController = require("../controllers/flight.controller");
 const { authorizeRoles } = require("../middleware/auth");
 
 router.get("/", flightController.getFlights);
+router.get("/search", flightController.search);
 router.get("/:id", flightController.getFlightById);
 router.post("/", authorizeRoles(["admin"]), flightController.createFlight);
 router.put("/:id", authorizeRoles(["admin"]), flightController.updateFlight);

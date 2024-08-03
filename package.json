@@ -1,0 +1,30 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "pm2 start server.js --name indigo-backend",
+        "dev": "nodemon server.js",
+        "stop": "pm2 stop indigo-backend",
+        "restart": "pm2 restart indigo-backend",
+        "delete": "pm2 delete indigo-backend"
+    },
+    "keywords": [],
+    "author": "Sanskar",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "jsonwebtoken": "^9.0.2",
+        "kafka-node": "^5.0.0",
+        "mongoose": "^8.5.1",
+        "morgan": "^1.10.0",
+        "nodemailer": "^6.9.14",
+        "pm2": "^5.4.2",
+        "socket.io": "^4.7.5",
+        "twilio": "^5.2.2"
+    }
+}
